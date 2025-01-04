@@ -1,0 +1,64 @@
+---
+- name: Install Neovim from source
+  hosts: localhost
+  tasks:
+    - name: Ensure required build tools are installed
+      ansible.builtin.package:
+        name:
+          - ninja-build
+          - gettext
+          - cmake
+          - unzip
+          - curl
+          - git
+          - fzf
+          - luajit
+          - luarocks
+          - hererocks
+          - ripgrep
+          - libtool
+          - libtool-bin
+          - autoconf
+          - automake
+          - g++
+          - pkg-config
+          - python3
+          - python3-pip
+        state: present
+      become: yes
+
+    - name: Update the apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      become: yes
+
+    - name: Clone Neovim repository
+      ansible.builtin.git:
+        repo: https://github.com/neovim/neovim.git
+        dest: /usr/local/src/neovim
+        version: stable
+      become: yes
+
+    - name: Build and install Neovim
+      ansible.builtin.shell: |
+        make CMAKE_BUILD_TYPE=Release
+        make install
+      args:
+        chdir: /usr/local/src/neovim
+      become: yes
+
+    - name: Verify Neovim installation
+      ansible.builtin.command: nvim --version
+      register: neovim_version
+      ignore_errors: yes
+
+    - name: Debug Neovim version
+      ansible.builtin.debug:
+        msg: "Installed Neovim version: {{ neovim_version.stdout_lines }}"
+
+    - name: Remove Neovim source directory
+      ansible.builtin.file:
+        path: /usr/local/src/neovim
+        state: absent
+      become: yes
+
