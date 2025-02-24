@@ -27,5 +27,7 @@ return {
         }
 
         alpha.setup(dashboard.opts)
+        dashboard.opts.opts.noautocmd = true
+        vim.keymap.set("n", "<leader>d", "<cmd>Alpha<CR>")
     end,
 }
