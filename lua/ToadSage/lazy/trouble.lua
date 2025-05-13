@@ -5,7 +5,7 @@ return {
         config = function()
             -- Setup the trouble plugin with custom configurations
             require("trouble").setup({
-                icons = false, -- Disable icons in the trouble window.
+                icons = true, -- Disable icons in the trouble window.
             })
 
             -- Keybindings to toggle and navigate the trouble list.

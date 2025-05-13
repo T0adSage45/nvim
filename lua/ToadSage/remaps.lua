@@ -60,8 +60,8 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton scramble<CR>")
 
 --[  uncomment for format and save at same time
 --vim.keymap.set("n", "<leader>ss", function()
-  --  vim.lsp.buf.format()
-  --  vim.cmd("w")
+--  vim.lsp.buf.format()
+--  vim.cmd("w")
 --end, { desc = "Format the file and save" })
 --]
 

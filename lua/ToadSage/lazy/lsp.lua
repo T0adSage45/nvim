@@ -38,10 +38,10 @@ return {
             ensure_installed = {
                 "lua_ls",
                 "marksman",
-               -- "clangd",
+                -- "clangd",
                 "ts_ls",
-               -- "rust_analyzer",
-               -- "zls",
+                -- "rust_analyzer",
+                -- "zls",
             },
             handlers = {
                 function(server_name) -- Default handler for LSPs
