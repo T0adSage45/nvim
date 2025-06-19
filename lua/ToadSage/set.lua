@@ -30,5 +30,5 @@ vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
 -- Performance and UI settings
-vim.opt.updatetime = 50
+vim.opt.updatetime = 40
 vim.opt.colorcolumn = "80"

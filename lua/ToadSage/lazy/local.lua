@@ -50,6 +50,14 @@ local local_plugins = {
             end)
         end,
     },
+    {
+        "stevearc/oil.nvim",
+        enable = false,
+        ---@module 'oil',
+        ---@type oil.SetupOpts
+        opts = {},
+        dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    },
 }
 
 return local_plugins
