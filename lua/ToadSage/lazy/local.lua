@@ -59,5 +59,4 @@ local local_plugins = {
         dependencies = { { "echasnovski/mini.icons", opts = {} } },
     },
 }
-
 return local_plugins

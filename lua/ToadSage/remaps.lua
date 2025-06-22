@@ -3,8 +3,8 @@ vim.g.mapleader = " "
 
 -- File explorer command
 vim.keymap.set("n", "<leader>pv", function()
-vim.cmd("silent! lua vim.cmd('e .')")
-end,{desc = "open default NetRW manually"})
+	vim.cmd("silent! lua vim.cmd('e .')")
+end, { desc = "open default NetRW manually" })
 
 -- Move selected lines in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -43,10 +43,10 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer <CR>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
 -- Navigate diagnostics and location list
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
 -- Search and replace current word
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -66,5 +66,5 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton scramble<CR>")
 
 -- Source current file
 vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
+	vim.cmd("so")
 end)

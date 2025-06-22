@@ -1,19 +1,18 @@
 ---
-- name: Install Neovim from source
+- name: Install Neovim from source on Arch Linux and apply custom config
   hosts: localhost
-  tasks:
-    # Update apt cache first to ensure fresh package information
-    - name: Update the apt cache
-      ansible.builtin.apt:
-        update_cache: yes
-      become: yes
+  become: yes
 
-    # Added missing build dependencies and removed hererocks from apt list
-    - name: Ensure required build tools and dependencies are installed
-      ansible.builtin.package:
+  tasks:
+    - name: Update the pacman cache
+      community.general.pacman:
+        update_cache: yes
+
+    - name: Install required build dependencies for Neovim
+      community.general.pacman:
         name:
-          - ninja-build
-          - gettext
+          - base-devel
+          - ninja
           - cmake
           - unzip
           - curl
@@ -23,57 +22,59 @@
           - luarocks
           - ripgrep
           - libtool
-          - libtool-bin
           - autoconf
           - automake
-          - g++
-          - pkg-config
-          - python3
-          - python3-pip
-          # Additional build dependencies
-          - libuv-dev
-          - libluv2-dev
-          - libunibilium-dev
-          - libmsgpack-dev
-          - libtermkey-dev
-          - libvterm-dev
-          - libluajit-5.1-dev
-          - lua5.1
-          - lua-lpeg
-          - lua-mpack
-          - lua-bitop
+          - gcc
+          - pkgconf
+          - python
+          - python-pip
+          - libuv
+          - libluv
+          - msgpack-c
+          - libtermkey
+          - libvterm
+          - lua51
+          - lua51-lpeg
+          - lua51-mpack
+          - lua51-bitop
           - doxygen
         state: present
-      become: yes
 
-    # Hererocks needs to be installed via pip
-    - name: Install hererocks via pip
-      ansible.builtin.pip:
-        name: hererocks
-      become: yes
+    - name: Check for existing Neovim version
+      ansible.builtin.command: nvim --version
+      register: nvim_version
+      ignore_errors: true
+
+    - name: Extract installed Neovim version
+      set_fact:
+        nvim_installed_version: "{{ nvim_version.stdout_lines[0].split()[1] | regex_replace('[^0-9.]', '') }}"
+      when: nvim_version.rc == 0
+
+    - name: Show installed Neovim version
+      ansible.builtin.debug:
+        msg: "Detected Neovim version: {{ nvim_installed_version | default('none') }}"
 
     - name: Clone Neovim repository
       ansible.builtin.git:
         repo: https://github.com/neovim/neovim.git
         dest: /usr/local/src/neovim
         version: stable
-      become: yes
+      when: nvim_version.rc != 0 or (nvim_installed_version is version('0.10.0', '<'))
 
-    # Build process remains the same but now has all required dependencies
     - name: Build and install Neovim
       ansible.builtin.shell: |
         make CMAKE_BUILD_TYPE=Release
         make install
       args:
         chdir: /usr/local/src/neovim
-      become: yes
+      when: nvim_version.rc != 0 or (nvim_installed_version is version('0.10.0', '<'))
 
     - name: Verify Neovim installation
       ansible.builtin.command: nvim --version
       register: neovim_version
-      ignore_errors: yes
+      ignore_errors: true
 
-    - name: Debug Neovim version
+    - name: Show Neovim version
       ansible.builtin.debug:
         msg: "Installed Neovim version: {{ neovim_version.stdout }}"
 
@@ -81,4 +82,18 @@
       ansible.builtin.file:
         path: /usr/local/src/neovim
         state: absent
-      become: yes
+      when: nvim_version.rc != 0 or (nvim_installed_version is version('0.10.0', '<'))
+
+    # 🎴 Clone your personal Neovim config
+    - name: Clone ToadSage45's Neovim config
+      ansible.builtin.git:
+        repo: https://github.com/T0adSage45/nvim.git
+        dest: "{{ ansible_env.HOME }}/.config/nvim"
+        force: yes
+
+    # 🌀 Optional: Install plugins (assuming lazy.nvim, packer, etc.)
+    - name: Launch Neovim to trigger plugin install
+      ansible.builtin.shell: |
+        nvim --headless "+Lazy! sync" +qa
+      args:
+        executable: /bin/bash
