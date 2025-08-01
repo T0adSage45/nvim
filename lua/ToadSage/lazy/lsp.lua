@@ -12,15 +12,19 @@ return {
 		"L3MON4D3/LuaSnip",
 		"saadparwaiz1/cmp_luasnip",
 		"j-hui/fidget.nvim",
+		"nvimtools/none-ls.nvim", -- Added null-ls here
 	},
 
 	config = function()
+		-- Setup Conform (optional formatter manager)
 		require("conform").setup({
 			formatters_by_ft = {},
 		})
+
 		local cmp = require("cmp")
 		local cmp_lsp = require("cmp_nvim_lsp")
-		-- Define LSP capabilities with cmp_nvim_lsp capabilities
+
+		-- LSP capabilities with completion support
 		local capabilities = vim.tbl_deep_extend(
 			"force",
 			{},
@@ -28,29 +32,56 @@ return {
 			cmp_lsp.default_capabilities()
 		)
 
-		-- Setup fidget (LSP progress)
+		-- Setup fidget for LSP progress UI
 		require("fidget").setup({})
-		-- Setup mason (LSP manager)
+
+		-- Setup Mason for managing LSP servers
 		require("mason").setup()
-		-- Setup mason-lspconfig (LSP integration with mason)
+
+		-- Setup Mason LSP config
 		require("mason-lspconfig").setup({
-			--- add ensure lsp for default installation
 			ensure_installed = {
 				"lua_ls",
-				"marksman",
-				-- "clangd",
+				"lemminx",
 				"ts_ls",
+				-- "clangd",
 				-- "rust_analyzer",
 				-- "zls",
 			},
 			handlers = {
-				function(server_name) -- Default handler for LSPs
+				-- Default handler
+				function(server_name)
 					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
 					})
 				end,
 
-				-- Zig LSP setup
+				lua_ls = function()
+					require("lspconfig").lua_ls.setup({
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								runtime = { version = "Lua 5.1" },
+								diagnostics = {
+									globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+								},
+							},
+						},
+					})
+				end,
+
+				ts_ls = function()
+					require("lspconfig").ts_ls.setup({})
+				end,
+
+				clangd = function()
+					require("lspconfig").clangd.setup({})
+				end,
+
+				rust_analyzer = function()
+					require("lspconfig").rust_analyzer.setup({})
+				end,
+
 				zls = function()
 					local lspconfig = require("lspconfig")
 					lspconfig.zls.setup({
@@ -66,46 +97,35 @@ return {
 					vim.g.zig_fmt_parse_errors = 0
 					vim.g.zig_fmt_autosave = 0
 				end,
-				-- clangd
-				["clangd"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.clangd.setup({})
-				end,
-				-- typescript
-				["ts_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.ts_ls.setup({})
-				end,
-				-- rust_analyzer
-				["rust_analyzer"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.rust_analyzer.setup({})
-				end,
-				-- Lua LSP setup
-				["lua_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup({
+
+				lemminx = function()
+					require("lspconfig").lemminx.setup({
 						capabilities = capabilities,
-						settings = {
-							Lua = {
-								runtime = { version = "Lua 5.1" },
-								diagnostics = {
-									globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-								},
-							},
-						},
+						filetypes = { "xml", "html", "xhtml", "svg", "markdown" },
 					})
 				end,
 			},
 		})
 
-		-- Setup completion
+		-- Setup null-ls (formatters, diagnostics)
+		local null_ls = require("null-ls")
+		null_ls.setup({
+			sources = {
+				null_ls.builtins.formatting.stylua,
+				null_ls.builtins.formatting.nixfmt,
+				-- Add diagnostics here if needed, e.g.
+				-- null_ls.builtins.diagnostics.shellcheck,
+			},
+			-- You can also configure on_attach here if needed
+		})
+
+		-- Setup nvim-cmp completion engine
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
 		cmp.setup({
 			snippet = {
 				expand = function(args)
-					require("luasnip").lsp_expand(args.body) -- For luasnip users
+					require("luasnip").lsp_expand(args.body)
 				end,
 			},
 			mapping = cmp.mapping.preset.insert({
@@ -116,16 +136,14 @@ return {
 			}),
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" },
-				{ name = "luasnip" }, -- For luasnip users
+				{ name = "luasnip" },
 			}, {
 				{ name = "buffer" },
 			}),
 		})
 
-		-- Configure diagnostics appearance
+		-- Diagnostics UI config
 		vim.diagnostic.config({
-			-- Uncomment to enable diagnostic updates in insert mode
-			-- update_in_insert = true,
 			float = {
 				focusable = false,
 				style = "minimal",
@@ -134,6 +152,7 @@ return {
 				header = "",
 				prefix = "",
 			},
+			-- update_in_insert = true, -- Uncomment if you want live updates
 		})
 	end,
 }
