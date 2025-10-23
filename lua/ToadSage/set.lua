@@ -1,16 +1,16 @@
 -- General settings
 vim.opt.guicursor = {
-    "n-v-c:block",
-    "i-ci-ve:ver25",
-    "r-cr:hor20",
-    "o:hor50",
+	"n-v-c:block",
+	"i-ci-ve:ver25",
+	"r-cr:hor20",
+	"o:hor50",
 }
 
 -- Line numbers
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
-vim.g.tmux_navigator_no_mappings = 1
+-- vim.g.tmux_navigator_no_mappings = 1
 
 -- Tab and indentation settings
 vim.opt.tabstop = 4
@@ -33,7 +33,7 @@ vim.opt.incsearch = true
 -- Color and interface settings
 vim.opt.termguicolors = true
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes:1"
+vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
 -- Performance and UI settings

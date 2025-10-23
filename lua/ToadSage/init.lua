@@ -37,6 +37,17 @@ autocmd({ "BufWritePre" }, {
 	pattern = "*",
 	command = [[%s/\s\+$//e]],
 })
+
+autocmd("BufEnter", {
+	group = ToadSage,
+	callback = function()
+		if vim.bo.filetype == "zig" then
+			pcall(vim.cmd.colorscheme, "tokyonight-night")
+		end
+		pcall(vim.cmd.colorscheme, "rose-pine-moon")
+	end,
+})
+
 -- Setup key mappings for LSP when attached to a buffer
 autocmd("LspAttach", {
 	group = ToadSage,
@@ -63,7 +74,7 @@ autocmd("LspAttach", {
 		vim.keymap.set("n", "<leader>vrn", function()
 			vim.lsp.buf.rename()
 		end, opts)
-		vim.keymap.set("i", "<C-?>", function()
+		vim.keymap.set("n", "<C-?>", function()
 			vim.lsp.buf.signature_help()
 		end, opts)
 		vim.keymap.set("n", "[d", function()

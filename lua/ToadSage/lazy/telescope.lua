@@ -3,20 +3,12 @@ return {
 	tag = "0.1.5", -- Specifies the version of Telescope to install.
 
 	dependencies = {
-		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		"nvim-lua/plenary.nvim", -- Required for Telescope to function properly.
 	},
 
 	config = function()
 		-- Basic setup for Telescope.
-		require("telescope").setup({
-
-			extentions = {
-				fzf = {},
-			},
-		})
-
-		require("telescope").load_extension("fzf")
+		require("telescope").setup({})
 
 		-- Access Telescope's builtin functions.
 		local builtin = require("telescope.builtin")

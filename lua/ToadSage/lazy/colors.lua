@@ -29,79 +29,80 @@ return {
 		end,
 	},
 
-	-- Tokyo Night theme (dark theme with variations)
 	{
 		"folke/tokyonight.nvim",
-		lazy = false, -- Load the plugin immediately
+		lazy = false,
+		opts = {},
 		config = function()
-			ColorMyPencils("tokyonight")
+			ColorMyPencils()
+		end,
+	},
+	{
+		"ellisonleao/gruvbox.nvim",
+		name = "gruvbox",
+		config = function()
+			require("gruvbox").setup({
+				terminal_colors = true, -- add neovim terminal colors
+				undercurl = true,
+				underline = false,
+				bold = true,
+				italic = {
+					strings = false,
+					emphasis = false,
+					comments = false,
+					operators = false,
+					folds = false,
+				},
+				strikethrough = true,
+				invert_selection = false,
+				invert_signs = false,
+				invert_tabline = false,
+				invert_intend_guides = false,
+				inverse = true, -- invert background for search, diffs, statuslines and errors
+				contrast = "", -- can be "hard", "soft" or empty string
+				palette_overrides = {},
+				overrides = {},
+				dim_inactive = false,
+				transparent_mode = false,
+			})
+		end,
+	},
+	{
+		"folke/tokyonight.nvim",
+		config = function()
 			require("tokyonight").setup({
-				style = "night", -- Options: "storm", "moon", "night", "day"
-				transparent = true,
-				terminal_colors = true,
+				-- your configuration comes here
+				-- or leave it empty to use the default settings
+				style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+				transparent = true, -- Enable this to disable setting the background color
+				terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
 				styles = {
+					-- Style to be applied to different syntax groups
+					-- Value is any valid attr-list value for `:help nvim_set_hl`
 					comments = { italic = false },
 					keywords = { italic = false },
-					sidebars = "dark",
-					floats = "dark",
+					-- Background styles. Can be "dark", "transparent" or "normal"
+					sidebars = "dark", -- style for sidebars, see below
+					floats = "dark", -- style for floating windows
 				},
 			})
 		end,
 	},
 
-	-- Gruvbox theme (dark retro-inspired theme)
-	-- {
-	--     "ellisonleao/gruvbox.nvim",
-	--     name = "gruvbox",
-	--     config = function()
-	--         require("gruvbox").setup({
-	--             terminal_colors = true,
-	--             undercurl = true,
-	--             underline = false,
-	--             bold = true,
-	--             italic = { comments = false },
-	--             transparent_mode = true,
-	--         })
-	--         ColorMyPencils("gruvbox")
-	--     end,
-	-- },
-
-	-- Rose Pine theme (soft dark theme)
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
 				disable_background = true,
-				styles = { italic = false },
+				styles = {
+					italic = false,
+				},
 			})
-			ColorMyPencils("rose-pine")
+
+			ColorMyPencils()
 		end,
 	},
-
-	-- Solarized Osaka theme (dark variation of Solarized)
-	-- {
-	--     "craftzdog/solarized-osaka.nvim",
-	--     name = "solarized-osaka",
-	--     enable = false,
-	--     config = function()
-	--         require("solarized-osaka").setup({
-	--             transparent = true,
-	--             terminal_colors = true,
-	--             day_brightness = 0.3,
-	--         })
-	--         ColorMyPencils("solarized-osaka")
-	--     end,
-	-- },
-
-	-- Nord theme (cool-toned minimalist dark theme)
-	-- {
-	--     "shaunsingh/nord.nvim",
-	--     name = "nord",
-	--     config = function()
-	--         ColorMyPencils("nord")
-	--     end,
-	-- },
 
 	-- Kanagawa theme (dark theme inspired by Japanese art)
 	{
@@ -112,7 +113,7 @@ return {
 				transparent = true,
 				theme = "dragon", -- Options: "wave", "dragon", "lotus"
 			})
-			ColorMyPencils("kanagawa")
+			-- ColorMyPencils("kanagawa")
 		end,
 	},
 
@@ -127,7 +128,7 @@ return {
 				transparent_background = true,
 				dim_inactive = { enabled = true, shade = "dark", percentage = 0.15 },
 			})
-			ColorMyPencils("catppuccin")
+			-- ColorMyPencils("catppuccin")
 		end,
 	},
 
@@ -138,22 +139,7 @@ return {
 		config = function()
 			vim.g.everforest_background = "medium" -- Options: "hard", "medium", "soft"
 			vim.g.everforest_transparent_background = 1
-			ColorMyPencils("everforest")
+			-- ColorMyPencils("everforest")
 		end,
 	},
-
-	-- Material theme (dark modern palette)
-	-- {
-	--     "marko-cerovac/material.nvim",
-	--     name = "material",
-	--     config = function()
-	--         require("material").setup({
-	--             contrast = { sidebars = true, floating_windows = true },
-	--             styles = { comments = { italic = true } },
-	--             plugins = { "nvim-tree", "telescope", "gitsigns" },
-	--         })
-	--         vim.g.material_style = "darker" -- Options: "darker", "oceanic", "palenight", "deep ocean"
-	--         ColorMyPencils("material")
-	--     end,
-	-- },
 }
